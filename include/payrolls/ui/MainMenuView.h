@@ -14,12 +14,13 @@ class MainMenuView : public View {
  public:
   MainMenuView();
   ~MainMenuView();
-  void on_render() override;
-  void on_event(int key) override;
+
+  void draw_view() override;
+  void handle_key(int key) override;
 
  private:
-  MENU* main_menu;
-  WINDOW* menu_sub_win;
+  MENU* main_menu = nullptr;
+  WINDOW* menu_sub_win = nullptr;
   const std::vector<KeyHint>& hints() const override;
   std::vector<ITEM*> menu_items;
   static constexpr std::array<MainMenuOption, 4> kOptions = {{

@@ -4,6 +4,7 @@
 #include <string_view>
 #include <vector>
 
+#include "payrolls/ui/Events.h"
 #include "payrolls/ui/Layout.h"
 
 struct KeyHint {
@@ -22,12 +23,12 @@ class View {
   View(View&&) = delete;                  // no move constructor
   View& operator=(View&&) = delete;       // no move assignment
 
+  void on_render();
+  void on_event(KeyEvent& e);
   void draw_hints();
-
-  // review later for Template Method
-  virtual void on_render() = 0;
   virtual void on_update() {};
-  virtual void on_event(int key) = 0;
+  virtual void draw_view() {};
+  virtual void handle_key(int) {};
 
  protected:
   WINDOW* view_win;
@@ -36,6 +37,7 @@ class View {
   Section* focused_ = nullptr;
   bool change_focused_section(Dir direction);
   Rect content_rect() const;
+  std::string_view title = "";
 
  private:
   PANEL* panel = nullptr;

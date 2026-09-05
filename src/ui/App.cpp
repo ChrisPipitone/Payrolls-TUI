@@ -29,13 +29,14 @@ void App::run() {
     doupdate();
 
     int c = wgetch(view_stack.back()->view_win);
-    raise_event(c);
+    KeyEvent e{c, false};
+    raise_event(e);
     //  Main layer update here
     if (!view_stack.empty()) view_stack.back()->on_update();
   }
 }
 void App::stop() { is_running = false; }
 
-void App::raise_event(int key) {
-  if (!view_stack.empty()) view_stack.back()->on_event(key);
+void App::raise_event(KeyEvent& e) {
+  if (!view_stack.empty()) view_stack.back()->on_event(e);
 }

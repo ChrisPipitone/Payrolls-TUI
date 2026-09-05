@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 
-#include "payrolls/ui/Layout.h"
 #include "payrolls/ui/View.h"
 
 struct Employee {
@@ -18,9 +17,6 @@ class EmployeeView : public View {
  public:
   EmployeeView();
   ~EmployeeView() = default;
-
-  void on_render() override;
-  void on_event(int key) override;
 
  private:
   EmployeeViewState state;

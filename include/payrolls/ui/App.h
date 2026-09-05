@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "payrolls/ui/Events.h"
 #include "payrolls/ui/View.h"
 #include "payrolls/ui/utils.h"
 
@@ -14,7 +15,7 @@ class App {
 
   void run();
   void stop();
-  void raise_event(int key);
+  void raise_event(KeyEvent& e);
 
   template <typename TView>
   void navigate_to() {

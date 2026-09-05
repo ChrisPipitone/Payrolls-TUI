@@ -7,7 +7,9 @@
 #include "payrolls/ui/EmployeeView.h"
 #include "payrolls/ui/utils.h"
 
-MainMenuView::MainMenuView() : main_menu(nullptr), menu_items(kOptions.size() + 1, nullptr) {
+MainMenuView::MainMenuView() : menu_items(kOptions.size() + 1, nullptr) {
+  title = "Main Menu";
+
   // Fill main_menu with ITEM* with name and desc of kOptions
   for (size_t i = 0; i < kOptions.size(); i++) {
     menu_items[i] = new_item(kOptions[i].name.data(), kOptions[i].desc.data());
@@ -50,24 +52,10 @@ const std::vector<KeyHint>& MainMenuView::hints() const {
   return h;
 }
 
-void MainMenuView::on_render() {
-  // Print a border around the main window and print a title
-  box(view_win, 0, 0);
-  int w = getmaxx(view_win);
-  print_in_middle(view_win, 1, 0, w, "Main Menu View", COLOR_PAIR(1));
-  mvwaddch(view_win, 2, 0, ACS_LTEE);
-  mvwhline(view_win, 2, 1, ACS_HLINE, w - 2);
-  mvwaddch(view_win, 2, w - 1, ACS_RTEE);
+void MainMenuView::draw_view() { wnoutrefresh(menu_sub_win); }
 
-  draw_hints();
-  wnoutrefresh(view_win);
-  wnoutrefresh(menu_sub_win);
-}
-
-void MainMenuView::on_event(int key) {
+void MainMenuView::handle_key(int key) {
   handle_menu_nav(main_menu, key);
-
-  if (key == 'q') App::Get().stop();
 
   if (key == '\n' || key == KEY_ENTER) {
     int idx = item_index(current_item(main_menu));
