@@ -4,10 +4,11 @@
 #include "payrolls/ui/utils.h"
 
 EmployeeBenefitsSection::EmployeeBenefitsSection(WINDOW* parent) : Section(parent) {
+  title = "Benefits";
   menu_items.resize(kOptions.size() + 1, nullptr);
 }
 
-bool EmployeeBenefitsSection::setup_menu() {
+void EmployeeBenefitsSection::setup_menu() {
   // Fill menu with ITEM* with name and desc of kOptions
   for (size_t i = 0; i < kOptions.size(); i++) {
     menu_items[i] = new_item(kOptions[i].data(), "");
@@ -34,7 +35,6 @@ bool EmployeeBenefitsSection::setup_menu() {
   set_menu_sub(menu, menu_sub_win);
 
   post_menu(menu);
-  return true;
 }
 
 EmployeeBenefitsSection::~EmployeeBenefitsSection() {
@@ -50,24 +50,24 @@ EmployeeBenefitsSection::~EmployeeBenefitsSection() {
   // window is destoried by parent dtor
 }
 
-void EmployeeBenefitsSection::on_render() {
+void EmployeeBenefitsSection::draw_section() {
   if (!menu) {
     setup_menu();
   }
-
-  draw_border();
-
-  int w = getmaxx(section_win);
-  print_in_middle(section_win, 1, 0, w, "Benefits", COLOR_PAIR(1));
 };
 
-void EmployeeBenefitsSection::on_event(int key) {
+bool EmployeeBenefitsSection::handle_key(int key) {
   if (!menu) {
-    return;
+    return false;
   }
 
-  handle_menu_nav(menu, key);
+  // menu selection moved
+  if (handle_menu_nav(menu, key)) return true;
+
   if (key == '\n' || key == KEY_ENTER) {
     int idx = item_index(current_item(menu));
+    // we will do something with menu selection
+    return true;
   }
+  return false;
 }
