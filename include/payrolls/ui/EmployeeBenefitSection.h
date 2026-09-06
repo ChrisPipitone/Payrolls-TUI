@@ -10,7 +10,7 @@
 class EmployeeBenefitsSection : public Section {
  public:
   EmployeeBenefitsSection(WINDOW* parent);
-  ~EmployeeBenefitsSection();
+  ~EmployeeBenefitsSection() override;
   EmployeeBenefitsSection(const EmployeeBenefitsSection&) = delete;
   EmployeeBenefitsSection& operator=(const EmployeeBenefitsSection&) = delete;
 

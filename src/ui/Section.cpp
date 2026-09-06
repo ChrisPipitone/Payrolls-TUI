@@ -11,7 +11,7 @@ void Section::on_render() {
   if (!section_win_) return;
 
   int w = getmaxx(section_win_);
-  print_in_middle(section_win_, 1, 0, w, title_.data(), COLOR_PAIR(1));
+  print_in_middle(section_win_, 1, 0, w, title_, COLOR_PAIR(1));
 
   draw_border();
   draw_section();
@@ -29,7 +29,7 @@ void Section::set_rect(const Rect& r) {
 
 void Section::set_focused(bool b) { focused_ = b; }
 
-Rect& Section::get_rect() { return rect_; }
+const Rect& Section::get_rect() const { return rect_; }
 
 void Section::draw_border() {
   if (!section_win_) return;

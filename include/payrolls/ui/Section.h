@@ -16,7 +16,7 @@ class Section {
   void on_render();
   void on_event(KeyEvent& e);
 
-  Rect& get_rect();
+  const Rect& get_rect() const;
   void set_focused(bool b);
   void set_rect(const Rect& r);
 

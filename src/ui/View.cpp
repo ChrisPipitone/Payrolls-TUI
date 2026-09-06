@@ -36,7 +36,7 @@ void View::draw_hints() {
 void View::on_render() {
   box(view_win_, 0, 0);
   int w = getmaxx(view_win_);
-  print_in_middle(view_win_, 1, 0, w, title_.data(), COLOR_PAIR(1));
+  print_in_middle(view_win_, 1, 0, w, title_, COLOR_PAIR(1));
   mvwaddch(view_win_, 2, 0, ACS_LTEE);
   mvwhline(view_win_, 2, 1, ACS_HLINE, w - 2);
   mvwaddch(view_win_, 2, w - 1, ACS_RTEE);
@@ -52,7 +52,10 @@ void View::on_render() {
 }
 
 void View::on_event(KeyEvent& e) {
-  if (e.key == 'q') App::Get().stop();
+  if (e.key == 'q') {
+    e.accept();
+    App::Get().stop();
+  }
 
   if (!root_node_.children.empty()) {
     switch (e.key) {
@@ -87,9 +90,9 @@ bool View::change_focused_section(Dir direction) {
 
   if (!focused_) return false;
 
-  const bool horizontal = (direction == Dir::Left) || (direction == Dir::Right);
+  const bool kHorizontal = (direction == Dir::Left) || (direction == Dir::Right);
   // ncurses grows x rightward and y downward, so Right/Down are the positive directions
-  const bool is_forward = (direction == Dir::Right || direction == Dir::Down);
+  const bool kIsForward = (direction == Dir::Right || direction == Dir::Down);
 
   const Rect& focused_rect = focused_->get_rect();
   Section* best_section = nullptr;
@@ -112,13 +115,13 @@ bool View::change_focused_section(Dir direction) {
     // Space between my leading wall and the candidate's trailing wall
     int gap = 0;
 
-    if (horizontal) {
+    if (kHorizontal) {
       // Reject rects the beam misses — no shared rows means it is diagonal, not beside me
       if (!(candidate_rect.y < focused_rect.y + focused_rect.h &&
             focused_rect.y < candidate_rect.y + candidate_rect.h))
         return;
 
-      if (is_forward)
+      if (kIsForward)
         gap = candidate_rect.x - (focused_rect.x + focused_rect.w);
       else
         gap = focused_rect.x - (candidate_rect.x + candidate_rect.w);
@@ -131,7 +134,7 @@ bool View::change_focused_section(Dir direction) {
             focused_rect.x < candidate_rect.x + candidate_rect.w))
         return;
 
-      if (is_forward)
+      if (kIsForward)
         gap = candidate_rect.y - (focused_rect.y + focused_rect.h);
       else
         gap = focused_rect.y - (candidate_rect.y + candidate_rect.h);
@@ -145,9 +148,9 @@ bool View::change_focused_section(Dir direction) {
     if (gap < 0) return;
 
     // Exact ties go to whichever section traversal reached first — deterministic, arbitrary.
-    const std::pair score(gap, rect_center_deviation);
-    if (score < best_score) {
-      best_score = score;
+    const std::pair kScore(gap, rect_center_deviation);
+    if (kScore < best_score) {
+      best_score = kScore;
       best_section = &s;
     }
   };

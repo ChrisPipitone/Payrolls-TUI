@@ -13,7 +13,7 @@ struct MainMenuOption {
 class MainMenuView : public View {
  public:
   MainMenuView();
-  ~MainMenuView();
+  ~MainMenuView() override;
 
  private:
   MENU* main_menu_ = nullptr;

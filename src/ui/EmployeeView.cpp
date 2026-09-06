@@ -23,10 +23,10 @@ EmployeeView::EmployeeView() {
 }
 
 const std::vector<KeyHint>& EmployeeView::hints() const {
-  static const std::vector<KeyHint> h = {{"q", "Exit"},
-                                         {"H", "Focus Left"},
-                                         {"L", "Focus Right"},
-                                         {"J", "Focus Down"},
-                                         {"K", "Focus Up"}};
-  return h;
+  static const std::vector<KeyHint> kHints = {{"q", "Exit"},
+                                              {"H", "Focus Left"},
+                                              {"L", "Focus Right"},
+                                              {"J", "Focus Down"},
+                                              {"K", "Focus Up"}};
+  return kHints;
 }

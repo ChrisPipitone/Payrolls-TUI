@@ -42,8 +42,8 @@ MainMenuView::~MainMenuView() {
 }
 
 const std::vector<KeyHint>& MainMenuView::hints() const {
-  static const std::vector<KeyHint> h = {{"q", "Exit"}};
-  return h;
+  static const std::vector<KeyHint> kHints = {{"q", "Exit"}};
+  return kHints;
 }
 
 void MainMenuView::draw_view() { wnoutrefresh(menu_sub_win_); }
