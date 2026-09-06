@@ -29,7 +29,7 @@ add_executable(csi_payrolls
 )
 
 target_include_directories(csi_payrolls PRIVATE include ${CURSES_INCLUDE_DIRS})
-target_compile_options(csi_payrolls PRIVATE -Wall -Wextra)
+target_compile_options(csi_payrolls PRIVATE -Wall -Wextra -Wpedantic -Werror)
 target_link_libraries(csi_payrolls PRIVATE ${CURSES_LIBRARIES} ${PANEL_LIBRARY} ${MENU_LIBRARY})
 target_compile_definitions(csi_payrolls PRIVATE $<$<CONFIG:Debug>:_DEBUG>)
 

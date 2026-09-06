@@ -59,8 +59,8 @@ bool EmployeeBenefitsSection::handle_key(int key) {
   if (handle_menu_nav(menu_, key)) return true;
 
   if (key == '\n' || key == KEY_ENTER) {
-    int idx = item_index(current_item(menu_));
-    // we will do something with menu selection
+    // int idx = item_index(current_item(menu_));
+    //  we will do something with menu selection
     return true;
   }
   return false;
