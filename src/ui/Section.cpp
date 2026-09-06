@@ -4,41 +4,40 @@
 
 Section::Section(WINDOW* parent) : parent_(parent) {}
 Section::~Section() {
-  if (section_win) delwin(section_win);
+  if (section_win_) delwin(section_win_);
 }
 
 void Section::on_render() {
-  if (!section_win) return;
+  if (!section_win_) return;
 
-  int w = getmaxx(section_win);
-  print_in_middle(section_win, 1, 0, w, title.data(), COLOR_PAIR(1));
+  int w = getmaxx(section_win_);
+  print_in_middle(section_win_, 1, 0, w, title_, COLOR_PAIR(1));
 
   draw_border();
   draw_section();
 }
 
 void Section::on_event(KeyEvent& e) {
-  // maybe do something
   if (handle_key(e.key)) e.accept();
 }
 
 void Section::set_rect(const Rect& r) {
-  if (section_win) delwin(section_win);
-  section_win = derwin(parent_, r.h, r.w, r.y, r.x);
+  if (section_win_) delwin(section_win_);
+  section_win_ = derwin(parent_, r.h, r.w, r.y, r.x);
   rect_ = r;
 }
 
 void Section::set_focused(bool b) { focused_ = b; }
 
-Rect& Section::get_rect() { return rect_; }
+const Rect& Section::get_rect() const { return rect_; }
 
 void Section::draw_border() {
-  if (!section_win) return;
+  if (!section_win_) return;
   if (!focused_) {
-    box(section_win, 0, 0);
+    box(section_win_, 0, 0);
     return;
   }
-  wattron(section_win, COLOR_PAIR(2) | A_BOLD);
-  box(section_win, 0, 0);
-  wattroff(section_win, COLOR_PAIR(2) | A_BOLD);
+  wattron(section_win_, COLOR_PAIR(2) | A_BOLD);
+  box(section_win_, 0, 0);
+  wattroff(section_win_, COLOR_PAIR(2) | A_BOLD);
 }

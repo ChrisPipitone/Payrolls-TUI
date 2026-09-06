@@ -1,13 +1,15 @@
 #pragma once
 #include <menu.h>
 
-#include <string>
-
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
+#include <string_view>
 
 struct NcursesGuard {
   NcursesGuard() { initscr(); }
   ~NcursesGuard() { endwin(); }
+  NcursesGuard(const NcursesGuard&) = delete;
+  NcursesGuard& operator=(const NcursesGuard&) = delete;
+  NcursesGuard(NcursesGuard&&) = delete;
+  NcursesGuard& operator=(NcursesGuard&&) = delete;
 };
 
 inline bool handle_menu_nav(MENU* menu, int c) {
@@ -24,11 +26,11 @@ inline bool handle_menu_nav(MENU* menu, int c) {
 
   return true;
 }
-inline void print_in_middle(WINDOW* win, int starty, int startx, int width, const std::string& str,
+inline void print_in_middle(WINDOW* win, int starty, int startx, int width, std::string_view str,
                             chtype color) {
-  int x, y;
+  int x = 0, y = 0;
 
-  if (win == NULL) win = stdscr;
+  if (win == nullptr) win = stdscr;
   getyx(win, y, x);
   if (startx != 0) x = startx;
   if (starty != 0) y = starty;
@@ -37,12 +39,12 @@ inline void print_in_middle(WINDOW* win, int starty, int startx, int width, cons
   int length = static_cast<int>(str.length());
   x = startx + (width - length) / 2;
   wattron(win, color);
-  mvwprintw(win, y, x, "%s", str.c_str());
+  mvwprintw(win, y, x, "%.*s", static_cast<int>(str.size()), str.data());
   wattroff(win, color);
 }
 
 inline WINDOW* centered_win(int h, int w) {
-  int rows, cols;
+  int rows = 0, cols = 0;
   getmaxyx(stdscr, rows, cols);
   return newwin(h, w, (rows - h) / 2, (cols - w) / 2);
 }

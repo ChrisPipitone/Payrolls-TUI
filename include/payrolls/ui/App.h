@@ -21,20 +21,20 @@ class App {
   void navigate_to() {
     static_assert(std::is_base_of_v<View, TView>, "TView must derive from View");
 
-    if (!view_stack.empty()) {
-      hide_panel(view_stack.back()->panel);
-      view_stack.pop_back();  // View dtor fires here
+    if (!view_stack_.empty()) {
+      hide_panel(view_stack_.back()->panel_);
+      view_stack_.pop_back();  // View dtor fires here
     }
 
     auto view = std::make_unique<TView>();
-    show_panel(view->panel);
-    view_stack.push_back(std::move(view));
+    show_panel(view->panel_);
+    view_stack_.push_back(std::move(view));
   }
 
  private:
   App();
   ~App() = default;
-  NcursesGuard ncurses_guard;
-  bool is_running = false;
-  std::vector<std::unique_ptr<View>> view_stack;
+  NcursesGuard ncurses_guard_;
+  bool is_running_ = false;
+  std::vector<std::unique_ptr<View>> view_stack_;
 };

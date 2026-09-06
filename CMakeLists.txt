@@ -22,6 +22,7 @@ add_executable(csi_payrolls
   src/tax/NYTax.cpp
   src/ui/App.cpp
   src/ui/View.cpp
+  src/ui/Section.cpp
   src/ui/EmployeeView.cpp
   src/ui/EmployeeBenefitSection.cpp
   src/ui/MainMenuView.cpp

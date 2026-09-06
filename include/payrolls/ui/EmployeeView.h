@@ -16,7 +16,6 @@ struct EmployeeViewState {
 class EmployeeView : public View {
  public:
   EmployeeView();
-  ~EmployeeView() = default;
 
  private:
   EmployeeViewState state;

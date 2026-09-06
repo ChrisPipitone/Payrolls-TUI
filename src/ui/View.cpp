@@ -7,51 +7,57 @@
 #include "payrolls/ui/Layout.h"
 #include "payrolls/ui/utils.h"
 
-View::View() : view_win(newwin(LINES, COLS, 0, 0)), hint_der_win(nullptr) {
-  panel = new_panel(view_win);
-  hide_panel(panel);
-  keypad(view_win, TRUE);
-  hint_der_win = derwin(view_win, 3, COLS - 2, LINES - 4, 1);
+View::View()
+    : view_win_(newwin(LINES, COLS, 0, 0)),
+      panel_(new_panel(view_win_)),
+      hint_der_win_(derwin(view_win_, 3, COLS - 2, LINES - 4, 1)) {
+  hide_panel(panel_);
+  keypad(view_win_, TRUE);
 }
 
 View::~View() {
-  delwin(hint_der_win);
-  del_panel(panel);
-  delwin(view_win);
+  delwin(hint_der_win_);
+  del_panel(panel_);
+  delwin(view_win_);
 }
 
 void View::draw_hints() {
-  werase(hint_der_win);
-  box(hint_der_win, 0, 0);
+  werase(hint_der_win_);
+  box(hint_der_win_, 0, 0);
   int x = 1;
   for (const auto& hint : hints()) {
-    mvwprintw(hint_der_win, 1, x, "[%s] %s", hint.key.data(), hint.action.data());
-    x += 4 + hint.key.size() + hint.action.size();
+    mvwprintw(hint_der_win_, 1, x, "[%.*s] %.*s", static_cast<int>(hint.key.size()),
+              hint.key.data(), static_cast<int>(hint.action.size()), hint.action.data());
+    x += 4 + static_cast<int>(hint.key.size()) + static_cast<int>(hint.action.size());
   }
-  wnoutrefresh(hint_der_win);
+  wnoutrefresh(hint_der_win_);
 }
 
 void View::on_render() {
-  box(view_win, 0, 0);
-  int w = getmaxx(view_win);
-  print_in_middle(view_win, 1, 0, w, title.data(), COLOR_PAIR(1));
-  mvwaddch(view_win, 2, 0, ACS_LTEE);
-  mvwhline(view_win, 2, 1, ACS_HLINE, w - 2);
-  mvwaddch(view_win, 2, w - 1, ACS_RTEE);
+  box(view_win_, 0, 0);
+  int w = getmaxx(view_win_);
+  print_in_middle(view_win_, 1, 0, w, title_, COLOR_PAIR(1));
+  mvwaddch(view_win_, 2, 0, ACS_LTEE);
+  mvwhline(view_win_, 2, 1, ACS_HLINE, w - 2);
+  mvwaddch(view_win_, 2, w - 1, ACS_RTEE);
 
-  if (!root_node.children.empty()) {
-    for_each_section(root_node, [](Section& s) { s.on_render(); });
+  if (!root_node_.children.empty()) {
+    for_each_section(root_node_, [](Section& s) { s.on_render(); });
   }
 
   draw_view();
 
   draw_hints();
-  wnoutrefresh(view_win);
+  wnoutrefresh(view_win_);
 }
 
 void View::on_event(KeyEvent& e) {
-  if (e.key == 'q') App::Get().stop();
-  if (!root_node.children.empty()) {
+  if (e.key == 'q') {
+    e.accept();
+    App::Get().stop();
+  }
+
+  if (!root_node_.children.empty()) {
     switch (e.key) {
       case 'H':
         change_focused_section(Dir::Left);
@@ -75,7 +81,7 @@ void View::on_event(KeyEvent& e) {
     handle_key(e.key);
     e.accept();
   }
-  // error handling?
+  // TODO:  error handling?
 }
 
 bool View::change_focused_section(Dir direction) {
@@ -84,9 +90,9 @@ bool View::change_focused_section(Dir direction) {
 
   if (!focused_) return false;
 
-  const bool horizontal = (direction == Dir::Left) || (direction == Dir::Right);
+  const bool kHorizontal = (direction == Dir::Left) || (direction == Dir::Right);
   // ncurses grows x rightward and y downward, so Right/Down are the positive directions
-  const bool is_forward = (direction == Dir::Right || direction == Dir::Down);
+  const bool kIsForward = (direction == Dir::Right || direction == Dir::Down);
 
   const Rect& focused_rect = focused_->get_rect();
   Section* best_section = nullptr;
@@ -109,13 +115,13 @@ bool View::change_focused_section(Dir direction) {
     // Space between my leading wall and the candidate's trailing wall
     int gap = 0;
 
-    if (horizontal) {
+    if (kHorizontal) {
       // Reject rects the beam misses — no shared rows means it is diagonal, not beside me
       if (!(candidate_rect.y < focused_rect.y + focused_rect.h &&
             focused_rect.y < candidate_rect.y + candidate_rect.h))
         return;
 
-      if (is_forward)
+      if (kIsForward)
         gap = candidate_rect.x - (focused_rect.x + focused_rect.w);
       else
         gap = focused_rect.x - (candidate_rect.x + candidate_rect.w);
@@ -128,7 +134,7 @@ bool View::change_focused_section(Dir direction) {
             focused_rect.x < candidate_rect.x + candidate_rect.w))
         return;
 
-      if (is_forward)
+      if (kIsForward)
         gap = candidate_rect.y - (focused_rect.y + focused_rect.h);
       else
         gap = focused_rect.y - (candidate_rect.y + candidate_rect.h);
@@ -142,14 +148,14 @@ bool View::change_focused_section(Dir direction) {
     if (gap < 0) return;
 
     // Exact ties go to whichever section traversal reached first — deterministic, arbitrary.
-    const std::pair score(gap, rect_center_deviation);
-    if (score < best_score) {
-      best_score = score;
+    const std::pair kScore(gap, rect_center_deviation);
+    if (kScore < best_score) {
+      best_score = kScore;
       best_section = &s;
     }
   };
 
-  for_each_section(root_node, visit);
+  for_each_section(root_node_, visit);
   if (!best_section) return false;
 
   // is there a better way to enforce this?
