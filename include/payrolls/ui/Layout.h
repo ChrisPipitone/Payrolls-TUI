@@ -30,7 +30,7 @@ struct LayoutNode {
     Child child = {weight, nullptr, std::move(new_node)};
     children.push_back(std::move(child));
 
-    return *children.back().subtree;  // return a reference to the child
+    return *children.back().subtree;
   }
 };
 

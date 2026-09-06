@@ -4,68 +4,61 @@
 #include "payrolls/ui/utils.h"
 
 EmployeeBenefitsSection::EmployeeBenefitsSection(WINDOW* parent) : Section(parent) {
-  title = "Benefits";
-  menu_items.resize(kOptions.size() + 1, nullptr);
+  title_ = "Benefits";
+  menu_items_.resize(kOptions.size() + 1, nullptr);
 }
 
 void EmployeeBenefitsSection::setup_menu() {
-  // Fill menu with ITEM* with name and desc of kOptions
   for (size_t i = 0; i < kOptions.size(); i++) {
-    menu_items[i] = new_item(kOptions[i].data(), "");
+    menu_items_[i] = new_item(kOptions[i].data(), "");
   }
-  menu = new_menu(menu_items.data());
+  menu_ = new_menu(menu_items_.data());
 
-  // Set menu to main window and sub window
-  set_menu_win(menu, section_win);
+  set_menu_win(menu_, section_win_);
+  set_menu_mark(menu_, " * ");
 
-  // Mark must be set before scale_menu so width includes mark chars
-  set_menu_mark(menu, " * ");
+  int menu_h = 0, menu_w = 0;
+  scale_menu(menu_, &menu_h, &menu_w);
 
-  // Center Menu in Window
-  int menu_h, menu_w;
-  scale_menu(menu, &menu_h, &menu_w);
-
-  int win_h = getmaxy(section_win);
-  int win_w = getmaxx(section_win);
-  const int content_top = 3;
-  const int content_h = (win_h - 4) - content_top;
-  int start_y = content_top + (content_h - menu_h) / 2;
+  int win_h = getmaxy(section_win_);
+  int win_w = getmaxx(section_win_);
+  const int kContentTop = 3;
+  const int kContentH = (win_h - 4) - kContentTop;
+  int start_y = kContentTop + (kContentH - menu_h) / 2;
   int start_x = (win_w - menu_w) / 2;
-  menu_sub_win = derwin(section_win, menu_h, menu_w, start_y, start_x);
-  set_menu_sub(menu, menu_sub_win);
+  menu_sub_win_ = derwin(section_win_, menu_h, menu_w, start_y, start_x);
+  set_menu_sub(menu_, menu_sub_win_);
 
-  post_menu(menu);
+  post_menu(menu_);
 }
 
 EmployeeBenefitsSection::~EmployeeBenefitsSection() {
-  if (menu) {
-    unpost_menu(menu);
-    free_menu(menu);
+  if (menu_) {
+    unpost_menu(menu_);
+    free_menu(menu_);
   }
 
-  if (menu_sub_win) delwin(menu_sub_win);
+  if (menu_sub_win_) delwin(menu_sub_win_);
 
-  for (auto* item : menu_items)
+  for (auto* item : menu_items_)
     if (item) free_item(item);
-  // window is destoried by parent dtor
 }
 
 void EmployeeBenefitsSection::draw_section() {
-  if (!menu) {
+  if (!menu_) {
     setup_menu();
   }
-};
+}
 
 bool EmployeeBenefitsSection::handle_key(int key) {
-  if (!menu) {
+  if (!menu_) {
     return false;
   }
 
-  // menu selection moved
-  if (handle_menu_nav(menu, key)) return true;
+  if (handle_menu_nav(menu_, key)) return true;
 
   if (key == '\n' || key == KEY_ENTER) {
-    int idx = item_index(current_item(menu));
+    int idx = item_index(current_item(menu_));
     // we will do something with menu selection
     return true;
   }

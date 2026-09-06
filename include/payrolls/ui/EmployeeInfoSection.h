@@ -8,10 +8,10 @@ struct MenuOption {
 };
 class EmployeeInfoSection : public Section {
  public:
-  EmployeeInfoSection(WINDOW* parent) : Section(parent) { title = "Information"; }
+  EmployeeInfoSection(WINDOW* parent) : Section(parent) { title_ = "Information"; }
 };
 
 class EmployeePayrollSection : public Section {
  public:
-  EmployeePayrollSection(WINDOW* parent) : Section(parent) { title = "Payroll"; }
+  EmployeePayrollSection(WINDOW* parent) : Section(parent) { title_ = "Payroll"; }
 };

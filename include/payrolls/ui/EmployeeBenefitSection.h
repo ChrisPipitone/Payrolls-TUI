@@ -15,9 +15,9 @@ class EmployeeBenefitsSection : public Section {
   EmployeeBenefitsSection& operator=(const EmployeeBenefitsSection&) = delete;
 
  private:
-  MENU* menu = nullptr;
-  WINDOW* menu_sub_win = nullptr;
-  std::vector<ITEM*> menu_items;
+  MENU* menu_ = nullptr;
+  WINDOW* menu_sub_win_ = nullptr;
+  std::vector<ITEM*> menu_items_;
   static constexpr std::array<std::string_view, 2> kOptions = {"Request HR", "Request Admin"};
   void setup_menu();
   void draw_section() override;

@@ -18,25 +18,25 @@ App& App::Get() {
 }
 
 void App::run() {
-  is_running = true;
+  is_running_ = true;
 
   // Main Application loop
-  while (is_running) {
+  while (is_running_) {
     // NOTE: rendering can be done elsewhere (eg. render thread)
-    for (const std::unique_ptr<View>& view : view_stack) view->on_render();
+    for (const std::unique_ptr<View>& view : view_stack_) view->on_render();
 
     update_panels();
     doupdate();
 
-    int c = wgetch(view_stack.back()->view_win);
+    int c = wgetch(view_stack_.back()->view_win_);
     KeyEvent e{c, false};
     raise_event(e);
     //  Main layer update here
-    if (!view_stack.empty()) view_stack.back()->on_update();
+    if (!view_stack_.empty()) view_stack_.back()->on_update();
   }
 }
-void App::stop() { is_running = false; }
+void App::stop() { is_running_ = false; }
 
 void App::raise_event(KeyEvent& e) {
-  if (!view_stack.empty()) view_stack.back()->on_event(e);
+  if (!view_stack_.empty()) view_stack_.back()->on_event(e);
 }

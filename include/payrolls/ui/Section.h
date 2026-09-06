@@ -15,19 +15,21 @@ class Section {
 
   void on_render();
   void on_event(KeyEvent& e);
-  virtual void on_update() {};
-  virtual void draw_section() {};
-  virtual bool handle_key(int) { return false; };
 
   Rect& get_rect();
   void set_focused(bool b);
   void set_rect(const Rect& r);
 
  protected:
+  WINDOW* section_win_ = nullptr;
+  std::string_view title_ = "";
   void draw_border();
-  Rect rect_ = {0, 0, 0, 0};
+  virtual void on_update() {};
+  virtual void draw_section() {};
+  virtual bool handle_key(int) { return false; };
+
+ private:
   WINDOW* parent_ = nullptr;
-  WINDOW* section_win = nullptr;
   bool focused_ = false;
-  std::string_view title = "";
+  Rect rect_ = {0, 0, 0, 0};
 };
