@@ -14,10 +14,10 @@ struct EmployeeViewState {
 };
 
 class EmployeeView : public View {
- public:
+public:
   EmployeeView();
 
- private:
+private:
   EmployeeViewState state;
   const std::vector<KeyHint>& hints() const override;
 };

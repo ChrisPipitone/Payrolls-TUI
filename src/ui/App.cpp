@@ -9,7 +9,7 @@ App::App() {
   curs_set(0);
   keypad(stdscr, TRUE);
   init_pair(1, COLOR_RED, COLOR_BLACK);
-  init_pair(2, COLOR_YELLOW, COLOR_BLACK);  // focused section border
+  init_pair(2, COLOR_YELLOW, COLOR_BLACK); // focused section border
 }
 
 App& App::Get() {
@@ -23,7 +23,8 @@ void App::run() {
   // Main Application loop
   while (is_running_) {
     // NOTE: rendering can be done elsewhere (eg. render thread)
-    for (const std::unique_ptr<View>& view : view_stack_) view->on_render();
+    for (const std::unique_ptr<View>& view : view_stack_)
+      view->on_render();
 
     update_panels();
     doupdate();

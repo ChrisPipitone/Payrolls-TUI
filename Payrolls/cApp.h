@@ -1,14 +1,14 @@
 #pragma once
-#include "wx/wx.h"
 #include "cApp.h"
-class cApp : public wxApp
-{
+#include "wx/wx.h"
+class cApp : public wxApp {
 public:
-	cApp();
-	~cApp();
+  cApp();
+  ~cApp();
+
 private:
-	cApp* m_frame1 = nullptr;
+  cApp* m_frame1 = nullptr;
 
 public:
-	virtual bool OnInit();
+  virtual bool OnInit();
 };

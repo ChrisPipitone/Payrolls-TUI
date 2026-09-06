@@ -1,3 +1,5 @@
-BasedOnStyle: Google
+BasedOnStyle: LLVM
 IndentWidth: 2
-ColumnLimit: 100
+PointerAlignment: Left
+IndentCaseLabels: true
+AllowShortIfStatementsOnASingleLine: WithoutElse

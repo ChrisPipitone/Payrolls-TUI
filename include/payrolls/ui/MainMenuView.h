@@ -11,11 +11,11 @@ struct MainMenuOption {
 };
 
 class MainMenuView : public View {
- public:
+public:
   MainMenuView();
   ~MainMenuView() override;
 
- private:
+private:
   MENU* main_menu_ = nullptr;
   WINDOW* menu_sub_win_ = nullptr;
   std::vector<ITEM*> menu_items_;

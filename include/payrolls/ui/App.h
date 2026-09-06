@@ -8,7 +8,7 @@
 #include "payrolls/ui/utils.h"
 
 class App {
- public:
+public:
   static App& Get();
   App(const App&) = delete;
   App& operator=(const App&) = delete;
@@ -17,13 +17,13 @@ class App {
   void stop();
   void raise_event(KeyEvent& e);
 
-  template <typename TView>
-  void navigate_to() {
-    static_assert(std::is_base_of_v<View, TView>, "TView must derive from View");
+  template <typename TView> void navigate_to() {
+    static_assert(std::is_base_of_v<View, TView>,
+                  "TView must derive from View");
 
     if (!view_stack_.empty()) {
       hide_panel(view_stack_.back()->panel_);
-      view_stack_.pop_back();  // View dtor fires here
+      view_stack_.pop_back(); // View dtor fires here
     }
 
     auto view = std::make_unique<TView>();
@@ -31,7 +31,7 @@ class App {
     view_stack_.push_back(std::move(view));
   }
 
- private:
+private:
   App();
   ~App() = default;
   NcursesGuard ncurses_guard_;

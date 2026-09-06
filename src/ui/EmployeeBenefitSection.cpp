@@ -3,7 +3,8 @@
 
 #include "payrolls/ui/utils.h"
 
-EmployeeBenefitsSection::EmployeeBenefitsSection(WINDOW* parent) : Section(parent) {
+EmployeeBenefitsSection::EmployeeBenefitsSection(WINDOW* parent)
+    : Section(parent) {
   title_ = "Benefits";
   menu_items_.resize(kOptions.size() + 1, nullptr);
 }

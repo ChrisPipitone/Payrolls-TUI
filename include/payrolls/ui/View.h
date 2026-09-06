@@ -15,7 +15,7 @@ struct KeyHint {
 class View {
   friend class App;
 
- public:
+public:
   View();
   virtual ~View();
   View(const View&) = delete;
@@ -27,7 +27,7 @@ class View {
   void on_event(KeyEvent& e);
   void draw_hints();
 
- protected:
+protected:
   WINDOW* view_win_;
   LayoutNode root_node_;
   Section* focused_ = nullptr;
@@ -40,7 +40,7 @@ class View {
   virtual void draw_view() {};
   virtual void handle_key(int) {};
 
- private:
+private:
   PANEL* panel_ = nullptr;
   WINDOW* hint_der_win_;
 };

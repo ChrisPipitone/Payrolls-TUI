@@ -7,7 +7,7 @@
 #include "payrolls/ui/Rect.h"
 
 class Section {
- public:
+public:
   Section(WINDOW* parent);
   virtual ~Section();
   Section(const Section&) = delete;
@@ -20,7 +20,7 @@ class Section {
   void set_focused(bool b);
   void set_rect(const Rect& r);
 
- protected:
+protected:
   WINDOW* section_win_ = nullptr;
   std::string_view title_ = "";
   void draw_border();
@@ -28,7 +28,7 @@ class Section {
   virtual void draw_section() {};
   virtual bool handle_key(int) { return false; };
 
- private:
+private:
   WINDOW* parent_ = nullptr;
   bool focused_ = false;
   Rect rect_ = {0, 0, 0, 0};

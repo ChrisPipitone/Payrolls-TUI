@@ -3,6 +3,6 @@
 
 class NYTax {
 public:
-    double NYTaxRate(double grossIncome);
+  double NYTaxRate(double grossIncome);
 };
 #endif

@@ -4,6 +4,6 @@
 
 class NJTax {
 public:
-    double NJTaxRate(double grossIncome);
+  double NJTaxRate(double grossIncome);
 };
 #endif

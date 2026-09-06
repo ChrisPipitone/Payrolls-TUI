@@ -26,8 +26,8 @@ inline bool handle_menu_nav(MENU* menu, int c) {
 
   return true;
 }
-inline void print_in_middle(WINDOW* win, int starty, int startx, int width, std::string_view str,
-                            chtype color) {
+inline void print_in_middle(WINDOW* win, int starty, int startx, int width,
+                            std::string_view str, chtype color) {
   int x = 0, y = 0;
 
   if (win == nullptr) win = stdscr;

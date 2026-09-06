@@ -3,6 +3,6 @@
 
 class FedTax {
 public:
-    double FedTaxRate(double grossIncome);
+  double FedTaxRate(double grossIncome);
 };
 #endif

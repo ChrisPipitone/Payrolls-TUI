@@ -4,6 +4,6 @@
 
 class CTTax {
 public:
-    double CTTaxRate(double grossIncome);
+  double CTTaxRate(double grossIncome);
 };
 #endif
