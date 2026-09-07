@@ -36,7 +36,7 @@ inline void print_in_middle(WINDOW* win, int starty, int startx, int width,
   if (starty != 0) y = starty;
   if (width == 0) width = 80;
 
-  int length = static_cast<int>(str.length());
+  const int length = static_cast<int>(str.length());
   x = startx + (width - length) / 2;
   wattron(win, color);
   mvwprintw(win, y, x, "%.*s", static_cast<int>(str.size()), str.data());

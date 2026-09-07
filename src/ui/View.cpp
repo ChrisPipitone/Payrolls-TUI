@@ -36,7 +36,7 @@ void View::draw_hints() {
 
 void View::on_render() {
   box(view_win_, 0, 0);
-  int w = getmaxx(view_win_);
+  const int w = getmaxx(view_win_);
   print_in_middle(view_win_, 1, 0, w, title_, COLOR_PAIR(1));
   mvwaddch(view_win_, 2, 0, ACS_LTEE);
   mvwhline(view_win_, 2, 1, ACS_HLINE, w - 2);
@@ -104,7 +104,7 @@ bool View::change_focused_section(Dir direction) {
   std::pair best_score(INT_MAX, INT_MAX);
 
   // Applied to every leaf in the layout tree
-  auto visit = [&](Section& s) {
+  const auto visit = [&](Section& s) {
     if (&s == focused_) return;
 
     const Rect& candidate_rect = s.get_rect();
@@ -124,8 +124,8 @@ bool View::change_focused_section(Dir direction) {
     if (kHorizontal) {
       // Reject rects the beam misses — no shared rows means it is diagonal, not
       // beside me
-      if (!(candidate_rect.y < focused_rect.y + focused_rect.h &&
-            focused_rect.y < candidate_rect.y + candidate_rect.h))
+      if (candidate_rect.y >= focused_rect.y + focused_rect.h ||
+          focused_rect.y >= candidate_rect.y + candidate_rect.h)
         return;
 
       if (kIsForward)
@@ -139,8 +139,8 @@ bool View::change_focused_section(Dir direction) {
     } else {
       // Reject rects the beam misses — no shared cols means it is diagonal, not
       // beside me
-      if (!(candidate_rect.x < focused_rect.x + focused_rect.w &&
-            focused_rect.x < candidate_rect.x + candidate_rect.w))
+      if (candidate_rect.x >= focused_rect.x + focused_rect.w ||
+          focused_rect.x >= candidate_rect.x + candidate_rect.w)
         return;
 
       if (kIsForward)
