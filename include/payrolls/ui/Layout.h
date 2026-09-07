@@ -4,7 +4,7 @@
 
 #include "payrolls/ui/Section.h"
 
-enum class Dir { Left, Down, Up, Right };
+enum class Dir : std::uint8_t { Left, Down, Up, Right };
 
 struct LayoutNode {
   Axis axis = Axis::Col;
@@ -43,28 +43,29 @@ template <class F> inline void for_each_section(LayoutNode& node, F&& fn) {
   }
 }
 
-inline Section* get_first_leaf(LayoutNode& node) {
-  for (auto& c : node.children) {
+inline Section* get_first_leaf(const LayoutNode& node) {
+  for (const auto& c : node.children) {
     if (c.leaf) return c.leaf.get();
     if (c.subtree) return get_first_leaf(*c.subtree);
   }
   return nullptr;
 }
-inline void assign_rects(LayoutNode& n, Rect r) {
-  int total = (n.axis == Axis::Row) ? r.w : r.h; // which number am I cutting?
+inline void assign_rects(const LayoutNode& n, Rect r) {
+  const int total =
+      (n.axis == Axis::Row) ? r.w : r.h; // which number am I cutting?
   int sum = 0;
-  for (auto& c : n.children)
+  for (const auto& c : n.children)
     sum += c.weight; // denominator
 
   int prev = 0; // where the previous child's edge landed (0-based, local)
   int acc = 0;  // running weight total
 
-  for (auto& c : n.children) {
+  for (const auto& c : n.children) {
     acc += c.weight;
-    int edge = total * acc / sum; // int mult BEFORE div — don't reorder
-    int extent = edge - prev;
+    const int edge = total * acc / sum; // int mult BEFORE div — don't reorder
+    const int extent = edge - prev;
 
-    Rect sub =
+    const Rect sub =
         (n.axis == Axis::Row)
             ? Rect{r.h, extent, r.y, r.x + prev}  // Row: x moves, w varies
             : Rect{extent, r.w, r.y + prev, r.x}; // Col: y moves, h varies
