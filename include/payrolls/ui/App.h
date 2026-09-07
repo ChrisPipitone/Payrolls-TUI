@@ -12,6 +12,8 @@ public:
   static App& Get();
   App(const App&) = delete;
   App& operator=(const App&) = delete;
+  App(App&&) = delete;
+  App& operator=(App&&) = delete;
 
   void run();
   void stop();

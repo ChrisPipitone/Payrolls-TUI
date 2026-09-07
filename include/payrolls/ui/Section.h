@@ -12,6 +12,8 @@ public:
   virtual ~Section();
   Section(const Section&) = delete;
   Section& operator=(const Section&) = delete;
+  Section(Section&&) = delete;
+  Section& operator=(Section&&) = delete;
 
   void on_render();
   void on_event(KeyEvent& e);

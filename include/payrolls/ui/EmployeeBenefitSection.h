@@ -13,6 +13,8 @@ public:
   ~EmployeeBenefitsSection() override;
   EmployeeBenefitsSection(const EmployeeBenefitsSection&) = delete;
   EmployeeBenefitsSection& operator=(const EmployeeBenefitsSection&) = delete;
+  EmployeeBenefitsSection(EmployeeBenefitsSection&&) = delete;
+  EmployeeBenefitsSection& operator=(EmployeeBenefitsSection&&) = delete;
 
 private:
   MENU* menu_ = nullptr;

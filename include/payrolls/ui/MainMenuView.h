@@ -14,6 +14,10 @@ class MainMenuView : public View {
 public:
   MainMenuView();
   ~MainMenuView() override;
+  MainMenuView(const MainMenuView&) = delete;
+  MainMenuView& operator=(const MainMenuView&) = delete;
+  MainMenuView(MainMenuView&&) = delete;
+  MainMenuView& operator=(MainMenuView&&) = delete;
 
 private:
   MENU* main_menu_ = nullptr;
