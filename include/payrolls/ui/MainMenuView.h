@@ -23,7 +23,7 @@ private:
   MENU* main_menu_ = nullptr;
   WINDOW* menu_sub_win_ = nullptr;
   std::vector<ITEM*> menu_items_;
-  const std::vector<KeyHint>& hints() const override;
+  [[nodiscard]] const std::vector<KeyHint>& hints() const override;
   void draw_view() override;
   void handle_key(int key) override;
   static constexpr std::array<MainMenuOption, 4> kOptions = {{

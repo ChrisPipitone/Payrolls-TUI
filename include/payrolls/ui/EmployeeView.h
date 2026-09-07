@@ -19,5 +19,5 @@ public:
 
 private:
   EmployeeViewState state;
-  const std::vector<KeyHint>& hints() const override;
+  [[nodiscard]] const std::vector<KeyHint>& hints() const override;
 };
