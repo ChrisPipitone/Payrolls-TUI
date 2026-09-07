@@ -21,12 +21,12 @@ MainMenuView::MainMenuView() : menu_items_(kOptions.size() + 1, nullptr) {
   int menu_h = 0, menu_w = 0;
   scale_menu(main_menu_, &menu_h, &menu_w);
 
-  int win_h = getmaxy(view_win_);
-  int win_w = getmaxx(view_win_);
+  const int win_h = getmaxy(view_win_);
+  const int win_w = getmaxx(view_win_);
   const int kContentTop = 3;
   const int kContentH = (win_h - 4) - kContentTop;
-  int start_y = kContentTop + (kContentH - menu_h) / 2;
-  int start_x = (win_w - menu_w) / 2;
+  const int start_y = kContentTop + (kContentH - menu_h) / 2;
+  const int start_x = (win_w - menu_w) / 2;
   menu_sub_win_ = derwin(view_win_, menu_h, menu_w, start_y, start_x);
   set_menu_sub(main_menu_, menu_sub_win_);
 
@@ -52,7 +52,7 @@ void MainMenuView::handle_key(int key) {
   handle_menu_nav(main_menu_, key);
 
   if (key == '\n' || key == KEY_ENTER) {
-    int idx = item_index(current_item(main_menu_));
+    const int idx = item_index(current_item(main_menu_));
     if (idx == 0) App::Get().navigate_to<EmployeeView>();
     if (idx == 3) App::Get().stop();
   }

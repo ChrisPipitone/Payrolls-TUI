@@ -21,12 +21,12 @@ void EmployeeBenefitsSection::setup_menu() {
   int menu_h = 0, menu_w = 0;
   scale_menu(menu_, &menu_h, &menu_w);
 
-  int win_h = getmaxy(section_win_);
-  int win_w = getmaxx(section_win_);
+  const int win_h = getmaxy(section_win_);
+  const int win_w = getmaxx(section_win_);
   const int kContentTop = 3;
   const int kContentH = (win_h - 4) - kContentTop;
-  int start_y = kContentTop + (kContentH - menu_h) / 2;
-  int start_x = (win_w - menu_w) / 2;
+  const int start_y = kContentTop + (kContentH - menu_h) / 2;
+  const int start_x = (win_w - menu_w) / 2;
   menu_sub_win_ = derwin(section_win_, menu_h, menu_w, start_y, start_x);
   set_menu_sub(menu_, menu_sub_win_);
 

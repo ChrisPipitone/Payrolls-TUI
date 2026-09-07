@@ -29,7 +29,7 @@ void App::run() {
     update_panels();
     doupdate();
 
-    int c = wgetch(view_stack_.back()->view_win_);
+    const int c = wgetch(view_stack_.back()->view_win_);
     KeyEvent e{c, false};
     raise_event(e);
     //  Main layer update here
