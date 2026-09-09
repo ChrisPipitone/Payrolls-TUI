@@ -2,6 +2,8 @@ Checks: >
   bugprone-*,
   -bugprone-easily-swappable-parameters,
   -bugprone-suspicious-stringview-data-usage,
+  -bugprone-exception-escape,
+  -bugprone-signed-bitwise,
   performance-*,
   misc-const-correctness,
   cppcoreguidelines-special-member-functions,
