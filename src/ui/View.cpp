@@ -1,9 +1,11 @@
+// clang-format off
+#include "payrolls/ui/App.h"
 #include "payrolls/ui/View.h"
+// clang-format on
 
 #include <climits>
 #include <cstdlib>
 
-#include "payrolls/ui/App.h"
 #include "payrolls/ui/Layout.h"
 #include "payrolls/ui/utils.h"
 

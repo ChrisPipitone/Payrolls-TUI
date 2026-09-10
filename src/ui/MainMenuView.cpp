@@ -1,9 +1,10 @@
-
+// clang-format off
+#include "payrolls/ui/App.h"
 #include "payrolls/ui/MainMenuView.h"
+// clang-format on
 
 #include <menu.h>
 
-#include "payrolls/ui/App.h"
 #include "payrolls/ui/EmployeeView.h"
 #include "payrolls/ui/utils.h"
 
