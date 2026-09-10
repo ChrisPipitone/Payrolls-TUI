@@ -3,7 +3,7 @@
 #include "payrolls/ui/MainMenuView.h"
 
 int main() {
-  Database db("~/.local/share/payrolls/payrolls.db");
+  Database db("payrolls.db");
   App::Get().init(db);
   App::Get().navigate_to<MainMenuView>();
   App::Get().run();

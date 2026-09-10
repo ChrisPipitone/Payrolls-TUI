@@ -17,6 +17,10 @@ core
 *.sw
 
 
-# OS 
+# OS
 .DS_Store
+
+
+# DB
+*.db
 
