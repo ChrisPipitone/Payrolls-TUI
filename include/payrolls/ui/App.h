@@ -21,7 +21,7 @@ public:
   void init(Database& db);
   void raise_event(KeyEvent& e);
 
-  template <typename TView> void navigate_to() {
+  template <typename TView, typename... Args> void navigate_to(Args&&... args) {
     static_assert(std::is_base_of_v<View, TView>,
                   "TView must derive from View");
 
@@ -30,9 +30,10 @@ public:
       view_stack_.pop_back();
     }
 
-    auto view = std::make_unique<TView>();
+    auto view = std::make_unique<TView>(std::forward<Args>(args)...);
     show_panel(view->panel_);
     view_stack_.push_back(std::move(view));
+    view_stack_.back()->on_enter();
   }
 
 private:
