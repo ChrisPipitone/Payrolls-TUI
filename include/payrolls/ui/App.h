@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "payrolls/db/Database.h"
 #include "payrolls/ui/Events.h"
 #include "payrolls/ui/View.h"
 #include "payrolls/ui/utils.h"
@@ -17,6 +18,7 @@ public:
 
   void run();
   void stop();
+  void init(Database& db);
   void raise_event(KeyEvent& e);
 
   template <typename TView> void navigate_to() {
@@ -25,7 +27,7 @@ public:
 
     if (!view_stack_.empty()) {
       hide_panel(view_stack_.back()->panel_);
-      view_stack_.pop_back(); // View dtor fires here
+      view_stack_.pop_back();
     }
 
     auto view = std::make_unique<TView>();
@@ -37,6 +39,7 @@ private:
   App();
   ~App() = default;
   NcursesGuard ncurses_guard_;
+  Database* db_ = nullptr;
   bool is_running_ = false;
   std::vector<std::unique_ptr<View>> view_stack_;
 };

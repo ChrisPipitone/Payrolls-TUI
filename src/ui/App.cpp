@@ -1,5 +1,6 @@
 #include "payrolls/ui/App.h"
 
+#include <cassert>
 #include <panel.h>
 
 App::App() {
@@ -18,6 +19,8 @@ App& App::Get() {
 }
 
 void App::run() {
+  assert(db_ != nullptr);
+
   is_running_ = true;
 
   // Main Application loop
@@ -37,6 +40,8 @@ void App::run() {
   }
 }
 void App::stop() { is_running_ = false; }
+
+void App::init(Database& db) { db_ = &db; }
 
 void App::raise_event(KeyEvent& e) {
   if (!view_stack_.empty()) view_stack_.back()->on_event(e);
