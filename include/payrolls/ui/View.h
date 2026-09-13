@@ -36,7 +36,6 @@ protected:
 
   bool change_focused_section(Dir direction);
   [[nodiscard]] Rect content_rect() const;
-  virtual void on_enter() {}
   virtual void on_update() {};
   virtual void draw_view() {};
   virtual void handle_key(int) {};

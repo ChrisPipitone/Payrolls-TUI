@@ -33,7 +33,6 @@ public:
     auto view = std::make_unique<TView>(std::forward<Args>(args)...);
     show_panel(view->panel_);
     view_stack_.push_back(std::move(view));
-    view_stack_.back()->on_enter();
   }
 
 private:
