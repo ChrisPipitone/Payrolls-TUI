@@ -6,9 +6,9 @@
 
 class Database {
 public:
-  explicit Database(const std::string& path);
+  Database(const std::string& path);
 
-  SQLite::Database& connection();
+  template <typename TRepo> TRepo make_repo() { return TRepo(db_); }
 
 private:
   void run_migrations();

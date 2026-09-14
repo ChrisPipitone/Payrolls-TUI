@@ -1,9 +1,11 @@
 #pragma once
-#include <menu.h>
 
 #include <array>
 
+#include "payrolls/db/Database.h"
 #include "payrolls/ui/View.h"
+
+#include <menu.h>
 
 struct MainMenuOption {
   std::string_view name;
@@ -12,7 +14,7 @@ struct MainMenuOption {
 
 class MainMenuView : public View {
 public:
-  MainMenuView();
+  explicit MainMenuView(Database& db);
   ~MainMenuView() override;
   MainMenuView(const MainMenuView&) = delete;
   MainMenuView& operator=(const MainMenuView&) = delete;
@@ -20,6 +22,7 @@ public:
   MainMenuView& operator=(MainMenuView&&) = delete;
 
 private:
+  Database& db_;
   MENU* main_menu_ = nullptr;
   WINDOW* menu_sub_win_ = nullptr;
   std::vector<ITEM*> menu_items_;

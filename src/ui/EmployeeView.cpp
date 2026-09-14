@@ -4,7 +4,7 @@
 #include "payrolls/ui/EmployeeInfoSection.h"
 #include "payrolls/ui/Layout.h"
 
-EmployeeView::EmployeeView() {
+EmployeeView::EmployeeView(EmployeeRepo emp_repo) : emp_repo_(emp_repo) {
   title_ = "Employee View";
   // build sections
   root_node_.axis = Axis::Row;
@@ -17,9 +17,10 @@ EmployeeView::EmployeeView() {
 
   assign_rects(root_node_, content_rect());
 
-  // set start focus, should this be more systemized?
   focused_ = get_first_leaf(root_node_);
   focused_->set_focused(true);
+
+  if (auto emp = emp_repo_.get_by_id(1)) employee_ = std::move(*emp);
 }
 
 const std::vector<KeyHint>& EmployeeView::hints() const {

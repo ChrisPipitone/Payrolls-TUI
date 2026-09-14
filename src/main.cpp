@@ -5,6 +5,6 @@
 int main() {
   Database db("payrolls.db");
   App::Get().init(db);
-  App::Get().navigate_to<MainMenuView>();
+  App::Get().navigate_to<MainMenuView>(db);
   App::Get().run();
 }

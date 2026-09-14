@@ -7,8 +7,6 @@ Database::Database(const std::string& path)
   // run_migrations();
 }
 
-SQLite::Database& Database::connection() { return db_; }
-
 // draft function that I may or may not end up actually implementing
 // don't really need migrations for a project of this level
 void Database::run_migrations() {

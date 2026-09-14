@@ -1,23 +1,16 @@
 #pragma once
-#include <string>
 #include <vector>
 
+#include "payrolls/db/EmployeeRepo.h"
+#include "payrolls/db/models.h"
 #include "payrolls/ui/View.h"
-
-struct Employee {
-  int id;
-  std::string first_name;
-};
-
-struct EmployeeViewState {
-  Employee curr_employee;
-};
 
 class EmployeeView : public View {
 public:
-  EmployeeView();
+  explicit EmployeeView(EmployeeRepo emp_repo);
 
 private:
-  EmployeeViewState state;
+  EmployeeRepo emp_repo_;
+  Employee employee_;
   [[nodiscard]] const std::vector<KeyHint>& hints() const override;
 };

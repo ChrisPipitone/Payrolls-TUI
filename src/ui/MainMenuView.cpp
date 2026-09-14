@@ -8,7 +8,8 @@
 #include "payrolls/ui/EmployeeView.h"
 #include "payrolls/ui/utils.h"
 
-MainMenuView::MainMenuView() : menu_items_(kOptions.size() + 1, nullptr) {
+MainMenuView::MainMenuView(Database& db)
+    : db_(db), menu_items_(kOptions.size() + 1, nullptr) {
   title_ = "Main Menu";
 
   for (size_t i = 0; i < kOptions.size(); i++) {
@@ -54,7 +55,8 @@ void MainMenuView::handle_key(int key) {
 
   if (key == '\n' || key == KEY_ENTER) {
     const int idx = item_index(current_item(main_menu_));
-    if (idx == 0) App::Get().navigate_to<EmployeeView>();
+    if (idx == 0)
+      App::Get().navigate_to<EmployeeView>(db_.make_repo<EmployeeRepo>());
     if (idx == 3) App::Get().stop();
   }
 }
