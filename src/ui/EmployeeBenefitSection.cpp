@@ -8,11 +8,6 @@ EmployeeBenefitsSection::EmployeeBenefitsSection(
   title_ = "Benefits";
 }
 
-EmployeeBenefitsSection::~EmployeeBenefitsSection() {
-  list_.reset();
-  if (list_win_) delwin(list_win_);
-}
-
 std::string EmployeeBenefitsSection::benefit_type_to_display(BenefitType t) {
   switch (t) {
     case BenefitType::dental:
@@ -50,8 +45,8 @@ void EmployeeBenefitsSection::draw_section() {
   if (!list_) {
     const int h = getmaxy(section_win_) - kContentTop - kBottomMargin;
     const int w = getmaxx(section_win_) - 2 * kSideMargin;
-    list_win_ = derwin(section_win_, h, w, kContentTop, kSideMargin);
-    list_ = std::make_unique<ScrollList>(list_win_);
+    list_ = std::make_unique<ScrollList>(section_win_, h, w, kContentTop,
+                                          kSideMargin);
 
     std::vector<std::string> rows;
     rows.reserve(benefits_.size());

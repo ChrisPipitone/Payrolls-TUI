@@ -10,11 +10,6 @@ EmployeePayrollSection::EmployeePayrollSection(
   title_ = "Payroll";
 }
 
-EmployeePayrollSection::~EmployeePayrollSection() {
-  list_.reset();
-  if (list_win_) delwin(list_win_);
-}
-
 std::string EmployeePayrollSection::pay_type_to_display(PayType t) {
   switch (t) {
     case PayType::hourly_full:
@@ -40,8 +35,8 @@ void EmployeePayrollSection::draw_section() {
   if (!list_) {
     const int h = getmaxy(section_win_) - kContentTop - kBottomMargin;
     const int w = getmaxx(section_win_) - 2 * kSideMargin;
-    list_win_ = derwin(section_win_, h, w, kContentTop, kSideMargin);
-    list_ = std::make_unique<ScrollList>(list_win_);
+    list_ = std::make_unique<ScrollList>(section_win_, h, w, kContentTop,
+                                          kSideMargin);
 
     std::vector<std::string> rows = {
         "Pay Type: " + pay_type_to_display(compensation_.pay_type),

@@ -10,7 +10,7 @@
 class EmployeeInfoSection : public Section {
 public:
   EmployeeInfoSection(WINDOW* parent, const Employee& employee);
-  ~EmployeeInfoSection() override;
+  ~EmployeeInfoSection() override = default;
   EmployeeInfoSection(const EmployeeInfoSection&) = delete;
   EmployeeInfoSection& operator=(const EmployeeInfoSection&) = delete;
   EmployeeInfoSection(EmployeeInfoSection&&) = delete;
@@ -24,6 +24,5 @@ private:
   static std::string status_to_display(EmployeeStatus s);
 
   Employee employee_;
-  WINDOW* list_win_ = nullptr;
   std::unique_ptr<ScrollList> list_;
 };

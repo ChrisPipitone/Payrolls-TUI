@@ -12,7 +12,7 @@ class EmployeePayrollSection : public Section {
 public:
   EmployeePayrollSection(WINDOW* parent, const Compensation& compensation,
                           const std::optional<Paystub>& latest_paystub);
-  ~EmployeePayrollSection() override;
+  ~EmployeePayrollSection() override = default;
   EmployeePayrollSection(const EmployeePayrollSection&) = delete;
   EmployeePayrollSection& operator=(const EmployeePayrollSection&) = delete;
   EmployeePayrollSection(EmployeePayrollSection&&) = delete;
@@ -27,6 +27,5 @@ private:
 
   Compensation compensation_;
   std::optional<Paystub> latest_paystub_;
-  WINDOW* list_win_ = nullptr;
   std::unique_ptr<ScrollList> list_;
 };

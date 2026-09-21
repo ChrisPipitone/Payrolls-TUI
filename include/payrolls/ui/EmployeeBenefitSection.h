@@ -11,7 +11,7 @@
 class EmployeeBenefitsSection : public Section {
 public:
   EmployeeBenefitsSection(WINDOW* parent, const std::vector<Benefit>& benefits);
-  ~EmployeeBenefitsSection() override;
+  ~EmployeeBenefitsSection() override = default;
   EmployeeBenefitsSection(const EmployeeBenefitsSection&) = delete;
   EmployeeBenefitsSection& operator=(const EmployeeBenefitsSection&) = delete;
   EmployeeBenefitsSection(EmployeeBenefitsSection&&) = delete;
@@ -26,6 +26,5 @@ private:
   static std::string format_cents(int cents);
 
   std::vector<Benefit> benefits_;
-  WINDOW* list_win_ = nullptr;
   std::unique_ptr<ScrollList> list_;
 };

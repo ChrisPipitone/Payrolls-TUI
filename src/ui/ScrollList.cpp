@@ -2,7 +2,8 @@
 
 #include "payrolls/ui/utils.h"
 
-ScrollList::ScrollList(WINDOW* win) : win_(win) {}
+ScrollList::ScrollList(WINDOW* parent, int h, int w, int y, int x)
+    : win_(derwin(parent, h, w, y, x)) {}
 
 ScrollList::~ScrollList() {
   if (menu_) {
@@ -12,6 +13,8 @@ ScrollList::~ScrollList() {
 
   for (auto* item : menu_items_)
     if (item) free_item(item);
+
+  if (win_) delwin(win_);
 }
 
 void ScrollList::set_items(std::vector<std::string> lines) {

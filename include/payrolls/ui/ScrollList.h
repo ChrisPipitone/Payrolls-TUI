@@ -7,7 +7,7 @@
 
 class ScrollList {
 public:
-  explicit ScrollList(WINDOW* win);
+  ScrollList(WINDOW* parent, int h, int w, int y, int x);
   ~ScrollList();
   ScrollList(const ScrollList&) = delete;
   ScrollList& operator=(const ScrollList&) = delete;
@@ -21,7 +21,7 @@ public:
 private:
   void setup_menu();
 
-  WINDOW* win_;
+  WINDOW* win_ = nullptr;
   MENU* menu_ = nullptr;
   std::vector<ITEM*> menu_items_;
   std::vector<std::string> items_;
