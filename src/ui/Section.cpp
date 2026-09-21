@@ -10,8 +10,10 @@ Section::~Section() {
 void Section::on_render() {
   if (!section_win_) return;
 
-  const int w = getmaxx(section_win_);
-  print_in_middle(section_win_, 1, 0, w, title_, COLOR_PAIR(1));
+  if (title_ != "") {
+    const int w = getmaxx(section_win_);
+    print_in_middle(section_win_, 1, 0, w, title_, COLOR_PAIR(1));
+  }
 
   draw_border();
   draw_section();
