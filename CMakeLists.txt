@@ -36,12 +36,17 @@ add_executable(csi_payrolls
   src/tax/NYTax.cpp
   src/db/Database.cpp
   src/db/EmployeeRepo.cpp
+  src/db/CompensationRepo.cpp
+  src/db/PaystubRepo.cpp
   src/ui/App.cpp
   src/ui/View.cpp
   src/ui/Section.cpp
+  src/ui/ScrollList.cpp
   src/ui/EmployeeView.cpp
+  src/ui/EmployeeInfoSection.cpp
+  src/ui/EmployeePayrollSection.cpp
   src/ui/EmployeeBenefitSection.cpp
-  src/ui/MainMenuView.cpp
+  src/ui/LandingView.cpp
 )
 
 target_include_directories(csi_payrolls PRIVATE include ${CURSES_INCLUDE_DIRS})

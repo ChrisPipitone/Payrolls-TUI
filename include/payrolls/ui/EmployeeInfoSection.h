@@ -1,13 +1,15 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
+#include "payrolls/db/models.h"
 #include "payrolls/ui/ScrollList.h"
 #include "payrolls/ui/Section.h"
 
 class EmployeeInfoSection : public Section {
 public:
-  EmployeeInfoSection(WINDOW* parent);
+  EmployeeInfoSection(WINDOW* parent, const Employee& employee);
   ~EmployeeInfoSection() override;
   EmployeeInfoSection(const EmployeeInfoSection&) = delete;
   EmployeeInfoSection& operator=(const EmployeeInfoSection&) = delete;
@@ -18,13 +20,10 @@ private:
   void draw_section() override;
   bool handle_key(int key) override;
 
+  static std::string position_to_display(EmployeePosition p);
+  static std::string status_to_display(EmployeeStatus s);
+
+  Employee employee_;
   WINDOW* list_win_ = nullptr;
   std::unique_ptr<ScrollList> list_;
-};
-
-class EmployeePayrollSection : public Section {
-public:
-  EmployeePayrollSection(WINDOW* parent) : Section(parent) {
-    title_ = "Payroll";
-  }
 };

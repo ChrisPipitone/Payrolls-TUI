@@ -5,6 +5,8 @@
 
 #include <menu.h>
 
+#include "payrolls/db/CompensationRepo.h"
+#include "payrolls/db/PaystubRepo.h"
 #include "payrolls/ui/EmployeeView.h"
 #include "payrolls/ui/utils.h"
 
@@ -56,7 +58,9 @@ void LandingView::handle_key(int key) {
   if (key == '\n' || key == KEY_ENTER) {
     const int idx = item_index(current_item(main_menu_));
     if (idx == 0)
-      App::Get().navigate_to<EmployeeView>(db_.make_repo<EmployeeRepo>());
+      App::Get().navigate_to<EmployeeView>(db_.make_repo<EmployeeRepo>(),
+                                            db_.make_repo<CompensationRepo>(),
+                                            db_.make_repo<PaystubRepo>());
     if (idx == 3) App::Get().stop();
   }
 }
