@@ -1,15 +1,16 @@
 #pragma once
-#include <menu.h>
 
-#include <array>
-#include <string_view>
+#include <memory>
+#include <string>
 #include <vector>
 
+#include "payrolls/db/models.h"
+#include "payrolls/ui/ScrollList.h"
 #include "payrolls/ui/Section.h"
 
 class EmployeeBenefitsSection : public Section {
 public:
-  EmployeeBenefitsSection(WINDOW* parent);
+  EmployeeBenefitsSection(WINDOW* parent, const std::vector<Benefit>& benefits);
   ~EmployeeBenefitsSection() override;
   EmployeeBenefitsSection(const EmployeeBenefitsSection&) = delete;
   EmployeeBenefitsSection& operator=(const EmployeeBenefitsSection&) = delete;
@@ -17,12 +18,14 @@ public:
   EmployeeBenefitsSection& operator=(EmployeeBenefitsSection&&) = delete;
 
 private:
-  MENU* menu_ = nullptr;
-  WINDOW* menu_sub_win_ = nullptr;
-  std::vector<ITEM*> menu_items_;
-  static constexpr std::array<std::string_view, 2> kOptions = {"Request HR",
-                                                               "Request Admin"};
-  void setup_menu();
   void draw_section() override;
   bool handle_key(int key) override;
+
+  static std::string benefit_type_to_display(BenefitType t);
+  static std::string benefit_tier_to_display(BenefitTier t);
+  static std::string format_cents(int cents);
+
+  std::vector<Benefit> benefits_;
+  WINDOW* list_win_ = nullptr;
+  std::unique_ptr<ScrollList> list_;
 };

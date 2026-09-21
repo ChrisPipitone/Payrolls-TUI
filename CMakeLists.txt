@@ -38,6 +38,7 @@ add_executable(csi_payrolls
   src/db/EmployeeRepo.cpp
   src/db/CompensationRepo.cpp
   src/db/PaystubRepo.cpp
+  src/db/BenefitsRepo.cpp
   src/ui/App.cpp
   src/ui/View.cpp
   src/ui/Section.cpp
@@ -46,6 +47,7 @@ add_executable(csi_payrolls
   src/ui/EmployeeInfoSection.cpp
   src/ui/EmployeePayrollSection.cpp
   src/ui/EmployeeBenefitSection.cpp
+  src/ui/BenefitsRequestSection.cpp
   src/ui/LandingView.cpp
 )
 

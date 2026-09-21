@@ -1,67 +1,72 @@
-
 #include "payrolls/ui/EmployeeBenefitSection.h"
 
-#include "payrolls/ui/utils.h"
+#include <cstdio>
 
-EmployeeBenefitsSection::EmployeeBenefitsSection(WINDOW* parent)
-    : Section(parent) {
+EmployeeBenefitsSection::EmployeeBenefitsSection(
+    WINDOW* parent, const std::vector<Benefit>& benefits)
+    : Section(parent), benefits_(benefits) {
   title_ = "Benefits";
-  menu_items_.resize(kOptions.size() + 1, nullptr);
-}
-
-void EmployeeBenefitsSection::setup_menu() {
-  for (size_t i = 0; i < kOptions.size(); i++) {
-    menu_items_[i] = new_item(kOptions[i].data(), "");
-  }
-  menu_ = new_menu(menu_items_.data());
-
-  set_menu_win(menu_, section_win_);
-  set_menu_mark(menu_, " * ");
-
-  int menu_h = 0, menu_w = 0;
-  scale_menu(menu_, &menu_h, &menu_w);
-
-  const int win_h = getmaxy(section_win_);
-  const int win_w = getmaxx(section_win_);
-  const int kContentTop = 3;
-  const int kContentH = (win_h - 4) - kContentTop;
-  const int start_y = kContentTop + (kContentH - menu_h) / 2;
-  const int start_x = (win_w - menu_w) / 2;
-  menu_sub_win_ = derwin(section_win_, menu_h, menu_w, start_y, start_x);
-  set_menu_sub(menu_, menu_sub_win_);
-
-  post_menu(menu_);
 }
 
 EmployeeBenefitsSection::~EmployeeBenefitsSection() {
-  if (menu_) {
-    unpost_menu(menu_);
-    free_menu(menu_);
+  list_.reset();
+  if (list_win_) delwin(list_win_);
+}
+
+std::string EmployeeBenefitsSection::benefit_type_to_display(BenefitType t) {
+  switch (t) {
+    case BenefitType::dental:
+      return "Dental";
+    case BenefitType::vision:
+      return "Vision";
+    case BenefitType::health:
+      return "Health";
   }
+  return "Health";
+}
 
-  if (menu_sub_win_) delwin(menu_sub_win_);
+std::string EmployeeBenefitsSection::benefit_tier_to_display(BenefitTier t) {
+  switch (t) {
+    case BenefitTier::waived:
+      return "Waived";
+    case BenefitTier::ineligible:
+      return "Ineligible";
+    case BenefitTier::premium:
+      return "Premium";
+  }
+  return "Waived";
+}
 
-  for (auto* item : menu_items_)
-    if (item) free_item(item);
+std::string EmployeeBenefitsSection::format_cents(int cents) {
+  char buf[16];
+  std::snprintf(buf, sizeof(buf), "$%.2f", cents / 100.0);
+  return buf;
 }
 
 void EmployeeBenefitsSection::draw_section() {
-  if (!menu_) {
-    setup_menu();
+  constexpr int kContentTop = 3;
+  constexpr int kBottomMargin = 1;
+  constexpr int kSideMargin = 1;
+  if (!list_) {
+    const int h = getmaxy(section_win_) - kContentTop - kBottomMargin;
+    const int w = getmaxx(section_win_) - 2 * kSideMargin;
+    list_win_ = derwin(section_win_, h, w, kContentTop, kSideMargin);
+    list_ = std::make_unique<ScrollList>(list_win_);
+
+    std::vector<std::string> rows;
+    rows.reserve(benefits_.size());
+    for (const auto& b : benefits_) {
+      rows.push_back(benefit_type_to_display(b.benefit_type) + ": " +
+                      benefit_tier_to_display(b.tier) + " (" +
+                      format_cents(b.cost_per_period_cents) + ")");
+    }
+    list_->set_items(std::move(rows));
   }
+
+  list_->render();
 }
 
 bool EmployeeBenefitsSection::handle_key(int key) {
-  if (!menu_) {
-    return false;
-  }
-
-  if (handle_menu_nav(menu_, key)) return true;
-
-  if (key == '\n' || key == KEY_ENTER) {
-    // int idx = item_index(current_item(menu_));
-    //  we will do something with menu selection
-    return true;
-  }
-  return false;
+  if (!list_) return false;
+  return list_->handle_key(key);
 }

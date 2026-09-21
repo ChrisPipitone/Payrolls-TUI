@@ -1,0 +1,65 @@
+#include "payrolls/ui/BenefitsRequestSection.h"
+
+#include "payrolls/ui/utils.h"
+
+BenefitsRequestSection::BenefitsRequestSection(WINDOW* parent)
+    : Section(parent) {
+  menu_items_.resize(kOptions.size() + 1, nullptr);
+}
+
+void BenefitsRequestSection::setup_menu() {
+  for (size_t i = 0; i < kOptions.size(); i++) {
+    menu_items_[i] = new_item(kOptions[i].data(), "");
+  }
+  menu_ = new_menu(menu_items_.data());
+
+  set_menu_win(menu_, section_win_);
+  set_menu_mark(menu_, " * ");
+
+  int menu_h = 0, menu_w = 0;
+  scale_menu(menu_, &menu_h, &menu_w);
+
+  const int win_h = getmaxy(section_win_);
+  const int win_w = getmaxx(section_win_);
+  const int kContentTop = 3;
+  const int kContentH = (win_h - 4) - kContentTop;
+  const int start_y = kContentTop + (kContentH - menu_h) / 2;
+  const int start_x = (win_w - menu_w) / 2;
+  menu_sub_win_ = derwin(section_win_, menu_h, menu_w, start_y, start_x);
+  set_menu_sub(menu_, menu_sub_win_);
+
+  post_menu(menu_);
+}
+
+BenefitsRequestSection::~BenefitsRequestSection() {
+  if (menu_) {
+    unpost_menu(menu_);
+    free_menu(menu_);
+  }
+
+  if (menu_sub_win_) delwin(menu_sub_win_);
+
+  for (auto* item : menu_items_)
+    if (item) free_item(item);
+}
+
+void BenefitsRequestSection::draw_section() {
+  if (!menu_) {
+    setup_menu();
+  }
+}
+
+bool BenefitsRequestSection::handle_key(int key) {
+  if (!menu_) {
+    return false;
+  }
+
+  if (handle_menu_nav(menu_, key)) return true;
+
+  if (key == '\n' || key == KEY_ENTER) {
+    // int idx = item_index(current_item(menu_));
+    //  we will do something with menu selection
+    return true;
+  }
+  return false;
+}
