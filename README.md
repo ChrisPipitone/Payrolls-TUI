@@ -2,7 +2,7 @@
 
 ![demo](docs/demo.gif)
 
-A TUI payroll system in standard C++17 (lol). With its own panel-based view router, a custom flexbox-like layout engine over ncurses UI, and SQLite persistence via SQLiteCpp. No framework GUI, no ORM: the router, the layout math, and the focus/navigation model are all built from scratch against raw ncurses primitives.
+A TUI payroll system in standard C++17 (lol). With VIM-style motions, its own panel-based view router, a custom flexbox-like layout engine over ncurses UI, and SQLite persistence via SQLiteCpp. No framework GUI, no ORM: the router, the layout math, and the focus/navigation model are all built from scratch against raw ncurses primitives.
 
 This project started as a CSC430 (Software Engineering) group project at CUNY College of Staten Island, a Windows Forms / C++/CLI / Microsoft Access app built to course spec.
 
