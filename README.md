@@ -108,3 +108,15 @@ App (singleton, owns view_stack_: vector<unique_ptr<View>>)
 - Visual Studio `.sln` build
 
 Source for the original is kept in `Payrolls/` for reference; it's not maintained.
+
+---
+
+## A note on the repo history
+
+This started as a fork of the original College of Staten Island CSC430 group repo. It's a standalone repository now, for full independence and not much of the original code would make it past the refactor. Idk if I should even keep calling it a refactor since the bulk of the old code was garbage UI code.
+
+Back in college we committed the Microsoft Access databases (`Payroll_InfoDone.accdb`, `PreviousEmployees.accdb`) straight into the repo. They _were_ the database: no schema file, no migrations, no seed script, just two binaries you pointed `ConnectionPath.h` at. We didn't know any better, and the course deadline didn't care. If we knew any better than we would've just done a web app instead... not a C++ UI scraped together by Visual Studio the grace of God or Microsoft Access files as a database.
+
+The MS Access files were deleted as of the SQLite migration. The schema lives in `data/migrations/` now.
+
+I left them in the git history until then purposely so I didn't have to re-download them once I got to doing the DB. Yes I could've gitignored them, I was lazy. It's all dummy data we made up for the assignment, so there's nothing of value that was leaked by committing anyway.
