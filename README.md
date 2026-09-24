@@ -1,60 +1,89 @@
 # Payrolls
 
-_City University of New York, College of Staten Island — Bachelor of Computer Science_
+![demo](docs/demo.gif)
 
-**Software Engineering Course CSC430 — Group Project**
+A TUI payroll system in standard C++17 (lol). With its own panel-based view router, a custom flexbox-like layout engine over ncurses UI, and SQLite persistence via SQLiteCpp. No framework GUI, no ORM: the router, the layout math, and the focus/navigation model are all built from scratch against raw ncurses primitives.
 
-Collaborated with other students to deliver a payroll system based on specifications outlined by the professor, iterated on from midterm to final based on feedback.
+This project started as a CSC430 (Software Engineering) group project at CUNY College of Staten Island, a Windows Forms / C++/CLI / Microsoft Access app built to course spec.
 
-Originally written in C++/CLI (Microsoft's managed C++ extension) targeting Windows Forms and Microsoft Access. The project is being refactored to standard C++17 with a CLI interface, portable build system, and SQLite database.
-
----
-
-## Current State (Original Submission)
-
-- C++/CLI targeting .NET — only compiles with MSVC on Windows
-- UI built with Windows Forms (`.resx` designer files)
-- Data stored in Microsoft Access (`.accdb` binary files)
-- Build via Visual Studio solution (`.sln` / `.vcxproj`)
-
-### How to Run (Original)
-
-1. Clone the repository
-2. Update the paths in `Payrolls/ConnectionPath.h` to match where the `.accdb` files are saved on your machine
-3. Open `Payrolls.sln` in Visual Studio
-4. Build and run
-5. Use login credentials from the Access database files
+This version exists purely as a learning device to shake off my rusty c++ skills after not touching the language seriously since college.
 
 ---
 
-## Refactoring Roadmap
+## What's here now
 
-Full details and code patterns in [REFACTORING.md](REFACTORING.md).
+- **CMake build**, no IDE dependency. SQLiteCpp pulled via `FetchContent`. `-Wall -Wextra -Wpedantic -Werror`, plus `.clang-format` and `.clang-tidy` enforced pre-commit.
+- **Panel-based view router** (`App`): singleton owns a view stack, pushes/pops `PANEL*`s, flush per frame instead of per-view `wrefresh`. Somewhat mimicked [TheCherno's Architecture](https://github.com/TheCherno/Architecture) layout for further inspiration.
+- **Custom layout engine** (`LayoutNode` / `assign_rects`): weighted row/column splits over a `WINDOW*`, recursively carving `Rect`s for child sections implemented directly against ncurses geometry.
+- **`View` → `Section` composition**: a `View` is a full-screen window holding a `LayoutNode` tree of `Section`s (bordered panes). Focus moves between sections with vim-style `H`/`J`/`K`/`L`, each `View` declares its own key hints rendered in the footer. I Django professionally so my thought processes worked in those terms here.
+- **`ScrollList`**: reusable scrollable list built on ncurses `MENU*`, used for paystub history.
+- **SQLite persistence**: schema in `data/migrations/`. Repos wrap `SQLiteCpp` and hand back plain structs (`Employee`, `Compensation`, `Benefit`, `Paystub`).
+- **RAII everywhere**: `NcursesGuard` wraps `initscr`/`endwin`; every `WINDOW*`/`PANEL*`/`MENU*` owner cleans up in its destructor; copy/move deleted where ownership can't be shared. probably could've done this better but hey it's a learning project.
 
-### Why Refactor
+**Working right now:** landing menu → Employee view, wired to real SQLite data (hardcoded to an employee id=1 but would work for any ofc): employee info, compensation, latest paystub, benefit elections, and a benefits-request panel, laid out via the layout engine and navigable by keyboard.
 
-The original project used C++/CLI — Microsoft's .NET extension — because Windows Forms was the quickest GUI available in Visual Studio. This was the right call under course deadline pressure. For standard C++ practice, portability, and CLI tooling, the whole stack needs to change.
+## What's not here and why
 
-### Planned Changes
+**Not wired yet:** login/auth (schema has `password_hash`, no screen uses it), HR and Manager routes (menu options exist, not implemented), add/update/remove employee flows, and the state tax classes (`FedTax`, `NYTax`, `NJTax`, `CTTax`), which are still flat-rate stand-ins from the original. Correct marginal-bracket math and a shared `Tax` base class are still TODO.
 
-| Area                | From                                     | To                                    | Why                                                                                                                 |
-| ------------------- | ---------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Language            | C++/CLI (`System::String^`, `ref class`) | Standard C++17                        | Portability, industry standard, works with `g++`/`clang++`                                                          |
-| Build               | Visual Studio `.sln`                     | CMake                                 | It's standard in the industries I want to break into. Cross-platform, generates `compile_commands.json` for tooling |
-| Database            | Microsoft Access (`.accdb`)              | SQLite                                | Cross-platform, no install required, version-controllable schema                                                    |
-| UI                  | Windows Forms                            | CLI (`std::cin`/`std::cout`)          | No platform dependency, separates logic from presentation                                                           |
-| Tax calculation     | Flat rate applied to full income         | Correct marginal brackets             | Current math produces wrong results                                                                                 |
-| Tax classes         | Four identical standalone classes        | Inheritance from abstract `Tax` base  | Eliminates duplication, enables polymorphism                                                                        |
-| Employee type       | Magic string `"Part time"`               | `enum class EmployeeType`             | Type-safe, no typo bugs                                                                                             |
-| Directory structure | Flat, all files in one folder            | `include/`, `src/`, `tests/`, `data/` | Standard C++ project layout                                                                                         |
+Idk if I'll ever get around to finishing these since I basically touched on all the concepts I wanted to here, but who knows.
+I stopped here because the last few times I've worked on this it felt more like I was trying to design a c++ wrapper or framework over ncurses which was beyond the scope of what I wanted to accomplish here. Good exercise but not worth the squeeze.
 
-### Refactoring Steps (in order)
+---
 
-1. Set up `CMakeLists.txt` + new directory structure, stub `main.cpp` compiling
-2. Strip all C++/CLI — replace `System::String^` with `std::string`, remove `gcnew`, `ref class`
-3. Split headers from implementations — no function bodies in `.h` files
-4. Build abstract `Tax` base class, make all state tax classes inherit from it
-5. Fix marginal bracket math
-6. Replace Access database with SQLite
-7. Add unit tests in `tests/` — start with tax calculation (pure functions)
-8. Build CLI menu in `main.cpp`
+## Build & run
+
+```sh
+cmake -S . -B build && cmake --build build && ./build/csi_payrolls
+```
+
+Requires `ncurses` (with `panel` and `menu`) on your system; SQLiteCpp and its SQLite3 are fetched and built automatically.
+
+---
+
+## Architecture
+
+```
+App (singleton, owns view_stack_: vector<unique_ptr<View>>)
+ │  navigate_to<T>() hides top panel, pushes new one
+ │  run() loop → update_panels(); doupdate()   (single flush per frame)
+ │
+ └─ EmployeeView : View
+     │  owns view_win_ (fullscreen WINDOW*) + PANEL*
+     │  owns root_node_: LayoutNode
+     │
+     └─ root_node_ (Row)
+         ├─ LayoutNode (Col)                    weight 1
+         │   ├─ EmployeeInfoSection             weight 3
+         │   └─ LayoutNode (Row)                weight 1
+         │       ├─ EmployeeBenefitsSection      weight 2
+         │       └─ BenefitsRequestSection        weight 1
+         │
+         └─ EmployeePayrollSection              weight 1
+             └─ ScrollList (paystub history, ncurses MENU*)
+```
+
+`assign_rects()` walks the tree once at construction, splitting `Rect`s by weight along each node's `Axis` (Row/Col) and handing each leaf `Section` its own sub-rect (no live terminal-resize handling yet). Each `Section` owns a `derwin`'d child `WINDOW*` inside `view_win_` and draws only itself. Focus is tracked as a single `Section*` on the `View`; `H`/`J`/`K`/`L` walk the same tree to retarget it.
+
+---
+
+## Stack, then vs. now
+
+| Area                | Original                                 | This version                         |
+| ------------------- | ----------------------------------------- | ------------------------------------ |
+| Language            | C++/CLI (`System::String^`, `ref class`) | Standard C++17                       |
+| Build               | Visual Studio `.sln`                     | CMake                                |
+| Database            | Microsoft Access (`.accdb`)              | SQLite via SQLiteCpp                 |
+| UI                  | Windows Forms (designer-generated)       | ncurses TUI, own panel/layout system |
+| Directory structure | Flat, one folder                         | `include/`, `src/`, `data/`          |
+
+---
+
+## Original submission (for reference)
+
+- C++/CLI targeting .NET, MSVC/Windows only
+- Windows Forms UI (`.resx` designer files)
+- Microsoft Access (`.accdb`) storage
+- Visual Studio `.sln` build
+
+Source for the original is kept in `Payrolls/` for reference; it's not maintained.
