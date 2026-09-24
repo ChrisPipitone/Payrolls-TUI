@@ -1,6 +1,7 @@
 #include "payrolls/db/Database.h"
+#include <algorithm>
 #include <filesystem>
-#include <fstream>
+#include <vector>
 
 Database::Database(const std::string& path)
     : db_(path, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE) {
