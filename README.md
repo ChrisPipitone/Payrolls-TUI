@@ -24,7 +24,15 @@ This version exists purely as a learning device to shake off my rusty c++ skills
 
 ## What's not here and why
 
-**Not wired yet:** login/auth (schema has `password_hash`, no screen uses it), HR and Manager routes (menu options exist, not implemented), add/update/remove employee flows, and the state tax classes (`FedTax`, `NYTax`, `NJTax`, `CTTax`), which are still flat-rate stand-ins from the original. Correct marginal-bracket math and a shared `Tax` base class are still TODO.
+**Not wired yet:**
+
+- login/auth (schema has `password_hash`, no screen uses it).
+- HR and Manager routes (menu options exist, not implemented).
+- add/update/remove employee flows.
+- the state tax classes (`FedTax`, `NYTax`, `NJTax`, `CTTax`), which are still flat-rate stand-ins from the original. Correct marginal-bracket math and a shared `Tax` base class are still TODO.
+- run_migrations() or any automatic DB creation.
+- Proper Exception/Error handling - mainly because I'm over this project and will tackle it in whatever I do next
+- Unit test - maybe since it should be easy enough with this project. Business logic is straight forward, but again I'm bored of this project.
 
 Idk if I'll ever get around to finishing these since I basically touched on all the concepts I wanted to here, but who knows.
 I stopped here because the last few times I've worked on this it felt more like I was trying to design a c++ wrapper or framework over ncurses which was beyond the scope of what I wanted to accomplish here. Good exercise but not worth the squeeze.
@@ -33,11 +41,24 @@ I stopped here because the last few times I've worked on this it felt more like 
 
 ## Build & run
 
+Initalize and create DB (one time only):
+
+```sh
+sqlite3 payrolls.db < data/migrations/001_initial.sql
+sqlite3 payrolls.db < data/migrations/seed.sql
+```
+
+Then build and run:
+
 ```sh
 cmake -S . -B build && cmake --build build && ./build/csi_payrolls
 ```
 
-Requires `ncurses` (with `panel` and `menu`) on your system; SQLiteCpp and its SQLite3 are fetched and built automatically.
+Run from the repo root: `payrolls.db` is opened by relative path.
+
+Requires `ncurses` (with `panel` and `menu`) and `sqlite3` on your system; SQLiteCpp and its SQLite3 are fetched and built automatically.
+
+There is no migration manager yet. `Database::run_migrations()` is a stub and is not called. Querying an unseeded database throws `SQLite::Exception`, which is currently uncaught and aborts the process.
 
 ---
 
@@ -70,7 +91,7 @@ App (singleton, owns view_stack_: vector<unique_ptr<View>>)
 ## Stack, then vs. now
 
 | Area                | Original                                 | This version                         |
-| ------------------- | ----------------------------------------- | ------------------------------------ |
+| ------------------- | ---------------------------------------- | ------------------------------------ |
 | Language            | C++/CLI (`System::String^`, `ref class`) | Standard C++17                       |
 | Build               | Visual Studio `.sln`                     | CMake                                |
 | Database            | Microsoft Access (`.accdb`)              | SQLite via SQLiteCpp                 |
